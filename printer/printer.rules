@@ -1,0 +1,8 @@
+rule "printer jammed"
+when
+    Item ipp_printer_HP_Color_LaserJet_MFP_M277n__F9DAA8__waitingJobs received update
+then
+    if (ipp_printer_HP_Color_LaserJet_MFP_M277n__F9DAA8__waitingJobs.state > 0) {
+        // send notification here
+    }
+end

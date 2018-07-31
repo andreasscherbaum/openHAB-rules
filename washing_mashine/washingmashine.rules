@@ -1,0 +1,115 @@
+val Number MODE_OFF = 0
+val Number MODE_STANDBY = 1
+val Number MODE_ACTIVE = 2
+val Number MODE_FINISHED = 3
+
+val Number POWER_OFF = 1.0
+val Number POWER_STANDBY = 5.0
+val Number POWER_ACTIVE = 200.0
+
+var Boolean wm_send_message = false
+var Boolean wm_message_sent = false
+var Boolean wm_log_active = false
+
+var Boolean dryer_send_message = false
+var Boolean dryer_message_sent = false
+var Boolean dryer_log_active = false
+
+
+
+rule "Washing machine Status"
+when
+    Item Washingmachine_Power received update
+then
+    // < 1.0 off
+    // 1.0 - 5.0 standby
+    // > 5.0 - 200.0 anti crease
+    // > 200.0 active
+    if (Washingmachine_State.state == NULL) {
+        // initial setup
+        postUpdate(Washingmachine_State, MODE_OFF)
+        wm_send_message = false
+        wm_message_sent = false
+        wm_log_active = false
+    }
+    if (Washingmachine_Power.state < POWER_OFF) {
+        postUpdate(Washingmachine_State, MODE_OFF)
+        //logInfo("Washing machine", "Washing machine is off")
+        wm_send_message = false
+        wm_message_sent = false
+        wm_log_active = false
+    } else if (Washingmachine_Power.state < POWER_STANDBY) {
+        if (Washingmachine_State.state == MODE_OFF) {
+            postUpdate(Washingmachine_State, MODE_STANDBY)
+            logInfo("Washing machine", "Washing machine is in standby")
+        } else if (Washingmachine_State.state == MODE_ACTIVE) {
+            postUpdate(Washingmachine_State, MODE_FINISHED)
+            logInfo("Washing machine", "Washing machine is finished")
+        }
+        if (wm_send_message == true) {
+            if (wm_message_sent == false) {
+                logInfo("Washing machine", "Washing machine is finished, sending notifications")
+                // send notifications here
+                wm_message_sent = true
+            }
+        }
+        wm_log_active = false
+    } else if (Washingmachine_Power.state >= POWER_ACTIVE) {
+        postUpdate(Washingmachine_State, MODE_ACTIVE)
+        if (wm_log_active == false) {
+            logInfo("Washing machine", "Washing machine is active")
+            wm_log_active = true
+        }
+        wm_send_message = true
+        wm_message_sent = false
+    }
+end
+
+
+rule "Dryer Status"
+when
+    Item Dryer_Power received update
+then
+    // < 1.0 off
+    // 1.0 - 5.0 standby
+    // > 5.0 - 200.0 anti crease
+    // > 200.0 active
+    if (Dryer_State.state == NULL) {
+        // initial setup
+        postUpdate(Dryer_State, MODE_OFF)
+        dryer_send_message = false
+        dryer_message_sent = false
+        dryer_log_active = false
+    }
+    if (Dryer_Power.state < POWER_OFF) {
+        postUpdate(Dryer_State, MODE_OFF)
+        logInfo("Dryer", "Dryer is off")
+        dryer_send_message = false
+        dryer_message_sent = false
+        dryer_log_active = false
+    } else if (Dryer_Power.state < POWER_STANDBY) {
+        if (Dryer_State.state == MODE_OFF) {
+            postUpdate(Dryer_State, MODE_STANDBY)
+            logInfo("Dryer", "Dryer is in standby")
+        } else if (Dryer_State.state == MODE_ACTIVE) {
+            postUpdate(Dryer_State, MODE_FINISHED)
+            logInfo("Dryer", "Dryer is finished")
+        }
+        if (dryer_send_message == true) {
+            if (dryer_message_sent == false) {
+                logInfo("Dryer", "Dryer is finished, sending notifications")
+                // send notifications here
+                dryer_message_sent = true
+            }
+        }
+        dryer_log_active = false
+    } else if (Dryer_Power.state >= POWER_ACTIVE) {
+        postUpdate(Dryer_State, MODE_ACTIVE)
+        if (dryer_log_active == false) {
+            logInfo("Dryer", "Dryer is active")
+            dryer_log_active = true
+        }
+        dryer_send_message = true
+        dryer_message_sent = false
+    }
+end
