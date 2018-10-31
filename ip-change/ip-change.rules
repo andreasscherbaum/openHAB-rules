@@ -5,7 +5,7 @@ rule "IP changes"
 when
     Item fboxWanIP received update
 then
-    if (LAST_IP != fboxWanIP.state.toString) {
+    if (LAST_IP != fboxWanIP.state.toString && fboxWanIP.state.toString != 'ERR') {
         logInfo("WAN IP", "IP changed: " + fboxWanIP.state.toString)
         if (now.getHourOfDay > 7 && now.getHourOfDay < 22 && LAST_IP != '') {
             // send notification here if you are interested in IP-address changes during the day
