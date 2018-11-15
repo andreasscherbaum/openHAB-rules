@@ -1,0 +1,15 @@
+// define the "battery_low" as Switch
+// Switch Battery_Alarm  "Battery Alarm"  {channel="avmfritz:FRITZ_DECT_301:********:********:battery_low"}
+
+
+rule "Alarm Battery Low"
+when
+    Time cron "0 0 10 * * ?"
+    // for testing purposes:
+    //Time cron "0 0/5 * * * ?"
+then
+    //logInfo("Battery Alarm", "Battery: " + Battery_Alarm.state)
+    if (Battery_Alarm.state == ON) {
+        logInfo("Battery Alarm", "Battery Alarm: " + Battery_Alarm.state.toString)
+    }
+end
