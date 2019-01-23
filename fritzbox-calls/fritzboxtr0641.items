@@ -1,0 +1,14 @@
+// only when using call monitor
+// #96*5* - enable callmonitor
+// #96*4* - disable callmonitor
+Switch		fboxRinging_In			"Phone ringing [MAP(fritzbox.map):%s]"		{fritzboxtr064="callmonitor_ringing" }
+Switch		fboxRinging_Out			"Phone ringing [MAP(fritzbox.map):%s]"		{fritzboxtr064="callmonitor_outgoing" }
+Call		fboxIncomingCall		"Incoming call: [%1$s to %2$s]"			{fritzboxtr064="callmonitor_ringing" } 
+Call		fboxOutgoingCall		"Outgoing call: [%1$s to %2$s]"			{fritzboxtr064="callmonitor_outgoing" }
+
+// resolve numbers to names according phonebook
+Call		fboxIncomingCallResolved	"Resolved: [%1$s to %2$s]"	{fritzboxtr064="callmonitor_ringing:resolveName" } 
+Call		fboxOutgoingCallResolved	"Resolved: [%1$s to %2$s]"	{fritzboxtr064="callmonitor_outgoing:resolveName" } 
+
+// Missed calls: specify the number of last days which should be searched for missed calls
+Number		fboxMissedCalls			"Missed Calls [%s]"		{fritzboxtr064="missedCallsInDays:5"}

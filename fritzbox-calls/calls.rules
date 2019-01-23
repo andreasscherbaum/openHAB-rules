@@ -1,0 +1,93 @@
+var Number missed_calls = 0
+
+var String call_number = ""
+var String call_name = ""
+var String call_info = ""
+
+
+rule "missed calls changes"
+when
+    Item fboxMissedCalls received update
+then
+    if (fboxMissedCalls.state == NULL) {
+        // initial setup
+        missed_calls = 0
+    } else if (fboxMissedCalls.state > 0) {
+        if (fboxMissedCalls.state != missed_calls) {
+            logInfo("Missed calls", "Missed calls: " + fboxMissedCalls.state.toString)
+            missed_calls = fboxMissedCalls.state
+        }
+    }
+end
+
+rule "Incoming call"
+when
+    Item fboxRinging_In changed from OFF to ON
+then
+    if (fboxIncomingCall.state != NULL) {
+        call_number = fboxIncomingCall.state.toString.split(",").get(1)
+        call_name = fboxIncomingCallResolved.state.toString.split(",").get(1)
+        if (call_number.length > 0) {
+            logInfo("Incoming call", "Number: " + call_number)
+        }
+        if (call_name.length > 0) {
+            logInfo("Incoming call", "Name: " + call_name)
+        }
+        if (call_number.length > 0) {
+            // call with number
+            if (call_name.length > 0) {
+                call_info = "Incoming call from " + call_name + " (" + call_number + ")"
+            } else {
+                call_info = "Incoming call from " + call_number
+            }
+        } else {
+            call_info = "Incoming call from supressed number"
+        }
+        logInfo("Incoming call", call_info)
+    }
+end
+
+rule "Incoming call end"
+when
+    Item fboxRinging_In changed from ON to OFF
+then
+    call_number = ""
+    call_name = ""
+    call_info = ""
+end
+
+rule "Outgoing call"
+when
+    Item fboxRinging_Out changed from OFF to ON
+then
+    if (fboxOutgoingCall.state != NULL) {
+        call_number = fboxOutgoingCall.state.toString.split(",").get(0)
+        call_name = fboxOutgoingCallResolved.state.toString.split(",").get(0)
+        if (call_number.length > 0) {
+            logInfo("Outgoing call", "Number: " + call_number)
+        }
+        if (call_name.length > 0) {
+            logInfo("Outgoing call", "Name: " + call_name)
+        }
+        if (call_number.length > 0) {
+            // call with number
+            if (call_name.length > 0) {
+                call_info = "Outgoing call to " + call_name + " (" + call_number + ")"
+            } else {
+                call_info = "Outgoing call to " + call_number
+            }
+        } else {
+            call_info = "Outgoing call to supressed number"
+        }
+        logInfo("Outgoing call", call_info)
+    }
+end
+
+rule "Outgoing call end"
+when
+    Item fboxRinging_Out changed from ON to OFF
+then
+    call_number = ""
+    call_name = ""
+    call_info = ""
+end
