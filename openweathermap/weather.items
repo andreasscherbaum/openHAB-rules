@@ -1,0 +1,219 @@
+Number:Temperature	homeCurrentTemperature		"Current temperature [%.1f %unit%]"	<temperature>	{ channel="openweathermap:weather-and-forecast:home:current#temperature" }
+Number:Temperature	homef03Temperature		"Temperature in 3h [%.1f %unit%]"	<temperature>	{ channel="openweathermap:weather-and-forecast:home:forecastHours03#temperature" }
+Number:Temperature	homef06Temperature		"Temperature in 6h [%.1f %unit%]"	<temperature>	{ channel="openweathermap:weather-and-forecast:home:forecastHours06#temperature" }
+Number:Temperature	homef09Temperature		"Temperature in 9h [%.1f %unit%]"	<temperature>	{ channel="openweathermap:weather-and-forecast:home:forecastHours09#temperature" }
+Number:Temperature	homef12Temperature		"Temperature in 12h [%.1f %unit%]"	<temperature>	{ channel="openweathermap:weather-and-forecast:home:forecastHours12#temperature" }
+Number:Temperature	homef15Temperature		"Temperature in 15h [%.1f %unit%]"	<temperature>	{ channel="openweathermap:weather-and-forecast:home:forecastHours15#temperature" }
+Number:Temperature	homef18Temperature		"Temperature in 18h [%.1f %unit%]"	<temperature>	{ channel="openweathermap:weather-and-forecast:home:forecastHours18#temperature" }
+Number:Temperature	homef21Temperature		"Temperature in 21h [%.1f %unit%]"	<temperature>	{ channel="openweathermap:weather-and-forecast:home:forecastHours21#temperature" }
+Number:Temperature	homef24Temperature		"Temperature in 24h [%.1f %unit%]"	<temperature>	{ channel="openweathermap:weather-and-forecast:home:forecastHours24#temperature" }
+
+Image			homeCurrentIcon			"Icon"							{ channel="openweathermap:weather-and-forecast:home:current#icon" }
+Image			homef03Icon			"Icon"							{ channel="openweathermap:weather-and-forecast:home:forecastHours03#icon" }
+Image			homef06Icon			"Icon"							{ channel="openweathermap:weather-and-forecast:home:forecastHours06#icon" }
+Image			homef09Icon			"Icon"							{ channel="openweathermap:weather-and-forecast:home:forecastHours09#icon" }
+Image			homef12Icon			"Icon"							{ channel="openweathermap:weather-and-forecast:home:forecastHours12#icon" }
+Image			homef15Icon			"Icon"							{ channel="openweathermap:weather-and-forecast:home:forecastHours15#icon" }
+Image			homef18Icon			"Icon"							{ channel="openweathermap:weather-and-forecast:home:forecastHours18#icon" }
+Image			homef21Icon			"Icon"							{ channel="openweathermap:weather-and-forecast:home:forecastHours21#icon" }
+Image			homef24Icon			"Icon"							{ channel="openweathermap:weather-and-forecast:home:forecastHours24#icon" }
+
+Number:Dimensionless	homeCurrentHumidity		"Current humidity [%d %unit%]"		<humidity>	{ channel="openweathermap:weather-and-forecast:home:current#humidity" }
+Number:Dimensionless	homef03Humidity			"Humidity in 3h [%d %unit%]"		<humidity>	{ channel="openweathermap:weather-and-forecast:home:forecastHours03#humidity" }
+Number:Dimensionless	homef06Humidity			"Humidity in 6h [%d %unit%]"		<humidity>	{ channel="openweathermap:weather-and-forecast:home:forecastHours06#humidity" }
+Number:Dimensionless	homef09Humidity			"Humidity in 9h [%d %unit%]"		<humidity>	{ channel="openweathermap:weather-and-forecast:home:forecastHours09#humidity" }
+Number:Dimensionless	homef12Humidity			"Humidity in 12h [%d %unit%]"		<humidity>	{ channel="openweathermap:weather-and-forecast:home:forecastHours12#humidity" }
+Number:Dimensionless	homef15Humidity			"Humidity in 15h [%d %unit%]"		<humidity>	{ channel="openweathermap:weather-and-forecast:home:forecastHours15#humidity" }
+Number:Dimensionless	homef18Humidity			"Humidity in 18h [%d %unit%]"		<humidity>	{ channel="openweathermap:weather-and-forecast:home:forecastHours18#humidity" }
+Number:Dimensionless	homef21Humidity			"Humidity in 21h [%d %unit%]"		<humidity>	{ channel="openweathermap:weather-and-forecast:home:forecastHours21#humidity" }
+Number:Dimensionless	homef24Humidity			"Humidity in 24h [%d %unit%]"		<humidity>	{ channel="openweathermap:weather-and-forecast:home:forecastHours24#humidity" }
+
+Number:Dimensionless	homeCurrentCloudiness		"Current cloudiness [%d %unit%]"	<clouds>	{ channel="openweathermap:weather-and-forecast:home:current#cloudiness" }
+Number:Dimensionless	homef03Cloudiness		"Cloudiness in 3h [%d %unit%]"		<clouds>	{ channel="openweathermap:weather-and-forecast:home:forecastHours03#cloudiness" }
+Number:Dimensionless	homef06Cloudiness		"Cloudiness in 6h [%d %unit%]"		<clouds>	{ channel="openweathermap:weather-and-forecast:home:forecastHours06#cloudiness" }
+Number:Dimensionless	homef09Cloudiness		"Cloudiness in 9h [%d %unit%]"		<clouds>	{ channel="openweathermap:weather-and-forecast:home:forecastHours09#cloudiness" }
+Number:Dimensionless	homef12Cloudiness		"Cloudiness in 12h [%d %unit%]"		<clouds>	{ channel="openweathermap:weather-and-forecast:home:forecastHours12#cloudiness" }
+Number:Dimensionless	homef15Cloudiness		"Cloudiness in 15h [%d %unit%]"		<clouds>	{ channel="openweathermap:weather-and-forecast:home:forecastHours15#cloudiness" }
+Number:Dimensionless	homef18Cloudiness		"Cloudiness in 18h [%d %unit%]"		<clouds>	{ channel="openweathermap:weather-and-forecast:home:forecastHours18#cloudiness" }
+Number:Dimensionless	homef21Cloudiness		"Cloudiness in 21h [%d %unit%]"		<clouds>	{ channel="openweathermap:weather-and-forecast:home:forecastHours21#cloudiness" }
+Number:Dimensionless	homef24Cloudiness		"Cloudiness in 24h [%d %unit%]"		<clouds>	{ channel="openweathermap:weather-and-forecast:home:forecastHours24#cloudiness" }
+
+DateTime		homeCurrentTS			"Timestamp Current [%1$tY-%1$tm-%1$tdT%1$tH:%1$tM:%1$tS]"	<time>	{ channel="openweathermap:weather-and-forecast:home:current#time-stamp" }
+DateTime		homef03TS			"Timestamp 3h [%1$tY-%1$tm-%1$tdT%1$tH:%1$tM:%1$tS]"		<time>	{ channel="openweathermap:weather-and-forecast:home:forecastHours03#time-stamp" }
+DateTime		homef06TS			"Timestamp 6h [%1$tY-%1$tm-%1$tdT%1$tH:%1$tM:%1$tS]"		<time>	{ channel="openweathermap:weather-and-forecast:home:forecastHours06#time-stamp" }
+DateTime		homef09TS			"Timestamp 9h [%1$tY-%1$tm-%1$tdT%1$tH:%1$tM:%1$tS]"		<time>	{ channel="openweathermap:weather-and-forecast:home:forecastHours09#time-stamp" }
+DateTime		homef12TS			"Timestamp 12h [%1$tY-%1$tm-%1$tdT%1$tH:%1$tM:%1$tS]"		<time>	{ channel="openweathermap:weather-and-forecast:home:forecastHours12#time-stamp" }
+DateTime		homef15TS			"Timestamp 15h [%1$tY-%1$tm-%1$tdT%1$tH:%1$tM:%1$tS]"		<time>	{ channel="openweathermap:weather-and-forecast:home:forecastHours15#time-stamp" }
+DateTime		homef18TS			"Timestamp 18h [%1$tY-%1$tm-%1$tdT%1$tH:%1$tM:%1$tS]"		<time>	{ channel="openweathermap:weather-and-forecast:home:forecastHours18#time-stamp" }
+DateTime		homef21TS			"Timestamp 21h [%1$tY-%1$tm-%1$tdT%1$tH:%1$tM:%1$tS]"		<time>	{ channel="openweathermap:weather-and-forecast:home:forecastHours21#time-stamp" }
+DateTime		homef24TS			"Timestamp 24h [%1$tY-%1$tm-%1$tdT%1$tH:%1$tM:%1$tS]"		<time>	{ channel="openweathermap:weather-and-forecast:home:forecastHours24#time-stamp" }
+
+String			homeCurrentCondition		"Current condition [%s]"		<sun_clouds>	{ channel="openweathermap:weather-and-forecast:home:current#condition" }
+String			homef03Condition		"Condition in 3h [%s]"			<sun_clouds>	{ channel="openweathermap:weather-and-forecast:home:forecastHours03#condition" }
+String			homef06Condition		"Condition in 6h [%s]"			<sun_clouds>	{ channel="openweathermap:weather-and-forecast:home:forecastHours06#condition" }
+String			homef09Condition		"Condition in 9h [%s]"			<sun_clouds>	{ channel="openweathermap:weather-and-forecast:home:forecastHours09#condition" }
+String			homef12Condition		"Condition in 12h [%s]"			<sun_clouds>	{ channel="openweathermap:weather-and-forecast:home:forecastHours12#condition" }
+String			homef15Condition		"Condition in 15h [%s]"			<sun_clouds>	{ channel="openweathermap:weather-and-forecast:home:forecastHours15#condition" }
+String			homef18Condition		"Condition in 18h [%s]"			<sun_clouds>	{ channel="openweathermap:weather-and-forecast:home:forecastHours18#condition" }
+String			homef21Condition		"Condition in 21h [%s]"			<sun_clouds>	{ channel="openweathermap:weather-and-forecast:home:forecastHours21#condition" }
+String			homef24Condition		"Condition in 24h [%s]"			<sun_clouds>	{ channel="openweathermap:weather-and-forecast:home:forecastHours24#condition" }
+
+Number:Speed		homeCurrentWindSpeed		"Current wind speed [%.1f km/h]"	<wind>		{ channel="openweathermap:weather-and-forecast:home:current#wind-speed" }
+Number:Speed		homef03WindSpeed		"Wind speed in 3h [%.1f km/h]"		<wind>		{ channel="openweathermap:weather-and-forecast:home:forecastHours03#wind-speed" }
+Number:Speed		homef06WindSpeed		"Wind speed in 6h [%.1f km/h]"		<wind>		{ channel="openweathermap:weather-and-forecast:home:forecastHours06#wind-speed" }
+Number:Speed		homef09WindSpeed		"Wind speed in 9h [%.1f km/h]"		<wind>		{ channel="openweathermap:weather-and-forecast:home:forecastHours09#wind-speed" }
+Number:Speed		homef12WindSpeed		"Wind speed in 12h [%.1f km/h]"		<wind>		{ channel="openweathermap:weather-and-forecast:home:forecastHours12#wind-speed" }
+Number:Speed		homef15WindSpeed		"Wind speed in 15h [%.1f km/h]"		<wind>		{ channel="openweathermap:weather-and-forecast:home:forecastHours15#wind-speed" }
+Number:Speed		homef18WindSpeed		"Wind speed in 18h [%.1f km/h]"		<wind>		{ channel="openweathermap:weather-and-forecast:home:forecastHours18#wind-speed" }
+Number:Speed		homef21WindSpeed		"Wind speed in 21h [%.1f km/h]"		<wind>		{ channel="openweathermap:weather-and-forecast:home:forecastHours21#wind-speed" }
+Number:Speed		homef24WindSpeed		"Wind speed in 24h [%.1f km/h]"		<wind>		{ channel="openweathermap:weather-and-forecast:home:forecastHours24#wind-speed" }
+
+Number:Length		homeCurrentRainVolume		"Current rain volume [%.1f %unit%]"	<rain>		{ channel="openweathermap:weather-and-forecast:home:current#rain" }
+Number:Length		homef03RainVolume		"Rain volume in 3h [%.1f %unit%]"	<rain>		{ channel="openweathermap:weather-and-forecast:home:forecastHours03#rain" }
+Number:Length		homef06RainVolume		"Rain volume in 6h [%.1f %unit%]"	<rain>		{ channel="openweathermap:weather-and-forecast:home:forecastHours06#rain" }
+Number:Length		homef09RainVolume		"Rain volume in 9h [%.1f %unit%]"	<rain>		{ channel="openweathermap:weather-and-forecast:home:forecastHours09#rain" }
+Number:Length		homef12RainVolume		"Rain volume in 12h [%.1f %unit%]"	<rain>		{ channel="openweathermap:weather-and-forecast:home:forecastHours12#rain" }
+Number:Length		homef15RainVolume		"Rain volume in 15h [%.1f %unit%]"	<rain>		{ channel="openweathermap:weather-and-forecast:home:forecastHours15#rain" }
+Number:Length		homef18RainVolume		"Rain volume in 18h [%.1f %unit%]"	<rain>		{ channel="openweathermap:weather-and-forecast:home:forecastHours18#rain" }
+Number:Length		homef21RainVolume		"Rain volume in 21h [%.1f %unit%]"	<rain>		{ channel="openweathermap:weather-and-forecast:home:forecastHours21#rain" }
+Number:Length		homef24RainVolume		"Rain volume in 24h [%.1f %unit%]"	<rain>		{ channel="openweathermap:weather-and-forecast:home:forecastHours24#rain" }
+
+Number:Length		homeCurrentSnowVolume		"Current snow volume [%.1f %unit%]"	<snow>		{ channel="openweathermap:weather-and-forecast:home:current#snow" }
+Number:Length		homef03SnowVolume		"Snow volume in 3h [%.1f %unit%]"	<snow>		{ channel="openweathermap:weather-and-forecast:home:forecastHours03#snow" }
+Number:Length		homef06SnowVolume		"Snow volume in 6h [%.1f %unit%]"	<snow>		{ channel="openweathermap:weather-and-forecast:home:forecastHours06#snow" }
+Number:Length		homef09SnowVolume		"Snow volume in 9h [%.1f %unit%]"	<snow>		{ channel="openweathermap:weather-and-forecast:home:forecastHours09#snow" }
+Number:Length		homef012SnowVolume		"Snow volume in 12h [%.1f %unit%]"	<snow>		{ channel="openweathermap:weather-and-forecast:home:forecastHours12#snow" }
+Number:Length		homef15SnowVolume		"Snow volume in 15h [%.1f %unit%]"	<snow>		{ channel="openweathermap:weather-and-forecast:home:forecastHours15#snow" }
+Number:Length		homef18SnowVolume		"Snow volume in 18h [%.1f %unit%]"	<snow>		{ channel="openweathermap:weather-and-forecast:home:forecastHours18#snow" }
+Number:Length		homef21SnowVolume		"Snow volume in 21h [%.1f %unit%]"	<snow>		{ channel="openweathermap:weather-and-forecast:home:forecastHours21#snow" }
+Number:Length		homef24SnowVolume		"Snow volume in 24h [%.1f %unit%]"	<snow>		{ channel="openweathermap:weather-and-forecast:home:forecastHours24#snow" }
+
+
+
+// channels:
+// openweathermap:weather-and-forecast:home:station#id
+// openweathermap:weather-and-forecast:home:station#name
+// openweathermap:weather-and-forecast:home:station#location
+// openweathermap:weather-and-forecast:home:current#time-stamp
+// openweathermap:weather-and-forecast:home:current#condition
+// openweathermap:weather-and-forecast:home:current#condition-id
+// openweathermap:weather-and-forecast:home:current#icon
+// openweathermap:weather-and-forecast:home:current#temperature
+// openweathermap:weather-and-forecast:home:current#pressure
+// openweathermap:weather-and-forecast:home:current#humidity
+// openweathermap:weather-and-forecast:home:current#wind-speed
+// openweathermap:weather-and-forecast:home:current#wind-direction
+// openweathermap:weather-and-forecast:home:current#gust-speed
+// openweathermap:weather-and-forecast:home:current#cloudiness
+// openweathermap:weather-and-forecast:home:current#rain
+// openweathermap:weather-and-forecast:home:current#snow
+// openweathermap:weather-and-forecast:home:forecastHours03#time-stamp
+// openweathermap:weather-and-forecast:home:forecastHours03#condition
+// openweathermap:weather-and-forecast:home:forecastHours03#condition-id
+// openweathermap:weather-and-forecast:home:forecastHours03#icon
+// openweathermap:weather-and-forecast:home:forecastHours03#temperature
+// openweathermap:weather-and-forecast:home:forecastHours03#pressure
+// openweathermap:weather-and-forecast:home:forecastHours03#humidity
+// openweathermap:weather-and-forecast:home:forecastHours03#wind-speed
+// openweathermap:weather-and-forecast:home:forecastHours03#wind-direction
+// openweathermap:weather-and-forecast:home:forecastHours03#gust-speed
+// openweathermap:weather-and-forecast:home:forecastHours03#cloudiness
+// openweathermap:weather-and-forecast:home:forecastHours03#rain
+// openweathermap:weather-and-forecast:home:forecastHours03#snow
+// openweathermap:weather-and-forecast:home:forecastHours06#time-stamp
+// openweathermap:weather-and-forecast:home:forecastHours06#condition
+// openweathermap:weather-and-forecast:home:forecastHours06#condition-id
+// openweathermap:weather-and-forecast:home:forecastHours06#icon
+// openweathermap:weather-and-forecast:home:forecastHours06#temperature
+// openweathermap:weather-and-forecast:home:forecastHours06#pressure
+// openweathermap:weather-and-forecast:home:forecastHours06#humidity
+// openweathermap:weather-and-forecast:home:forecastHours06#wind-speed
+// openweathermap:weather-and-forecast:home:forecastHours06#wind-direction
+// openweathermap:weather-and-forecast:home:forecastHours06#gust-speed
+// openweathermap:weather-and-forecast:home:forecastHours06#cloudiness
+// openweathermap:weather-and-forecast:home:forecastHours06#rain
+// openweathermap:weather-and-forecast:home:forecastHours06#snow
+// openweathermap:weather-and-forecast:home:forecastHours09#time-stamp
+// openweathermap:weather-and-forecast:home:forecastHours09#condition
+// openweathermap:weather-and-forecast:home:forecastHours09#condition-id
+// openweathermap:weather-and-forecast:home:forecastHours09#icon
+// openweathermap:weather-and-forecast:home:forecastHours09#temperature
+// openweathermap:weather-and-forecast:home:forecastHours09#pressure
+// openweathermap:weather-and-forecast:home:forecastHours09#humidity
+// openweathermap:weather-and-forecast:home:forecastHours09#wind-speed
+// openweathermap:weather-and-forecast:home:forecastHours09#wind-direction
+// openweathermap:weather-and-forecast:home:forecastHours09#gust-speed
+// openweathermap:weather-and-forecast:home:forecastHours09#cloudiness
+// openweathermap:weather-and-forecast:home:forecastHours09#rain
+// openweathermap:weather-and-forecast:home:forecastHours09#snow
+// openweathermap:weather-and-forecast:home:forecastHours12#time-stamp
+// openweathermap:weather-and-forecast:home:forecastHours12#condition
+// openweathermap:weather-and-forecast:home:forecastHours12#condition-id
+// openweathermap:weather-and-forecast:home:forecastHours12#icon
+// openweathermap:weather-and-forecast:home:forecastHours12#temperature
+// openweathermap:weather-and-forecast:home:forecastHours12#pressure
+// openweathermap:weather-and-forecast:home:forecastHours12#humidity
+// openweathermap:weather-and-forecast:home:forecastHours12#wind-speed
+// openweathermap:weather-and-forecast:home:forecastHours12#wind-direction
+// openweathermap:weather-and-forecast:home:forecastHours12#gust-speed
+// openweathermap:weather-and-forecast:home:forecastHours12#cloudiness
+// openweathermap:weather-and-forecast:home:forecastHours12#rain
+// openweathermap:weather-and-forecast:home:forecastHours12#snow
+// openweathermap:weather-and-forecast:home:forecastHours15#time-stamp
+// openweathermap:weather-and-forecast:home:forecastHours15#condition
+// openweathermap:weather-and-forecast:home:forecastHours15#condition-id
+// openweathermap:weather-and-forecast:home:forecastHours15#icon
+// openweathermap:weather-and-forecast:home:forecastHours15#temperature
+// openweathermap:weather-and-forecast:home:forecastHours15#pressure
+// openweathermap:weather-and-forecast:home:forecastHours15#humidity
+// openweathermap:weather-and-forecast:home:forecastHours15#wind-speed
+// openweathermap:weather-and-forecast:home:forecastHours15#wind-direction
+// openweathermap:weather-and-forecast:home:forecastHours15#gust-speed
+// openweathermap:weather-and-forecast:home:forecastHours15#cloudiness
+// openweathermap:weather-and-forecast:home:forecastHours15#rain
+// openweathermap:weather-and-forecast:home:forecastHours15#snow
+// openweathermap:weather-and-forecast:home:forecastHours18#time-stamp
+// openweathermap:weather-and-forecast:home:forecastHours18#condition
+// openweathermap:weather-and-forecast:home:forecastHours18#condition-id
+// openweathermap:weather-and-forecast:home:forecastHours18#icon
+// openweathermap:weather-and-forecast:home:forecastHours18#temperature
+// openweathermap:weather-and-forecast:home:forecastHours18#pressure
+// openweathermap:weather-and-forecast:home:forecastHours18#humidity
+// openweathermap:weather-and-forecast:home:forecastHours18#wind-speed
+// openweathermap:weather-and-forecast:home:forecastHours18#wind-direction
+// openweathermap:weather-and-forecast:home:forecastHours18#gust-speed
+// openweathermap:weather-and-forecast:home:forecastHours18#cloudiness
+// openweathermap:weather-and-forecast:home:forecastHours18#rain
+// openweathermap:weather-and-forecast:home:forecastHours18#snow
+// openweathermap:weather-and-forecast:home:forecastHours21#time-stamp
+// openweathermap:weather-and-forecast:home:forecastHours21#condition
+// openweathermap:weather-and-forecast:home:forecastHours21#condition-id
+// openweathermap:weather-and-forecast:home:forecastHours21#icon
+// openweathermap:weather-and-forecast:home:forecastHours21#temperature
+// openweathermap:weather-and-forecast:home:forecastHours21#pressure
+// openweathermap:weather-and-forecast:home:forecastHours21#humidity
+// openweathermap:weather-and-forecast:home:forecastHours21#wind-speed
+// openweathermap:weather-and-forecast:home:forecastHours21#wind-direction
+// openweathermap:weather-and-forecast:home:forecastHours21#gust-speed
+// openweathermap:weather-and-forecast:home:forecastHours21#cloudiness
+// openweathermap:weather-and-forecast:home:forecastHours21#rain
+// openweathermap:weather-and-forecast:home:forecastHours21#snow
+// openweathermap:weather-and-forecast:home:forecastHours24#time-stamp
+// openweathermap:weather-and-forecast:home:forecastHours24#condition
+// openweathermap:weather-and-forecast:home:forecastHours24#condition-id
+// openweathermap:weather-and-forecast:home:forecastHours24#icon
+// openweathermap:weather-and-forecast:home:forecastHours24#temperature
+// openweathermap:weather-and-forecast:home:forecastHours24#pressure
+// openweathermap:weather-and-forecast:home:forecastHours24#humidity
+// openweathermap:weather-and-forecast:home:forecastHours24#wind-speed
+// openweathermap:weather-and-forecast:home:forecastHours24#wind-direction
+// openweathermap:weather-and-forecast:home:forecastHours24#gust-speed
+// openweathermap:weather-and-forecast:home:forecastHours24#cloudiness
+// openweathermap:weather-and-forecast:home:forecastHours24#rain
+// openweathermap:weather-and-forecast:home:forecastHours24#snow
+
+
+
+
+
+

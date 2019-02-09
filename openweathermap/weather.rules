@@ -1,0 +1,27 @@
+rule "Weather forecast for tomorrow"
+when
+    Time cron "0 30 17 * * ?"
+then
+    var weather_forecast = "Weather tomorrow 6am: " + String::format("%1$1d", (homef12Temperature.state as Number).intValue) + " °C"
+    weather_forecast = weather_forecast + ", Humidity: " + homef12Humidity.state.toString
+    weather_forecast = weather_forecast + ", Cloudiness: " + homef12Cloudiness.state.toString
+    weather_forecast = weather_forecast + ", " + homef12Condition.state.toString
+
+    var rain_value = homef12RainVolume.state.toString.split(' ').get(0)
+    var rain_value_rounded = Math::round(Float::parseFloat(rain_value))
+    var rain_unit = homef12RainVolume.state.toString.split(' ').get(1)
+
+    if (rain_value_rounded > 0) {
+        weather_forecast = weather_forecast + ", Rain: " + rain_value_rounded.toString + " " + rain_unit
+    }
+
+    var snow_value = homef012SnowVolume.state.toString.split(' ').get(0)
+    var snow_value_rounded = Math::round(Float::parseFloat(snow_value))
+    var snow_unit = homef012SnowVolume.state.toString.split(' ').get(1)
+
+    if (snow_value_rounded > 0) {
+        weather_forecast = weather_forecast + ", Snow: " + snow_value_rounded.toString + " " + snow_unit
+    }
+    logInfo("Weather forecast", weather_forecast)
+    // send notification here
+end
