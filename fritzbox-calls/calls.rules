@@ -35,7 +35,7 @@ then
         }
         if (call_number.length > 0) {
             // call with number
-            if (call_name.length > 0) {
+            if (call_name.length > 0 && call_name.substring(0, 14) != "Name not found") {
                 call_info = "Incoming call from " + call_name + " (" + call_number + ")"
             } else {
                 call_info = "Incoming call from " + call_number
@@ -71,7 +71,7 @@ then
         }
         if (call_number.length > 0) {
             // call with number
-            if (call_name.length > 0) {
+            if (call_name.length > 0 && call_name.substring(0, 14) != "Name not found") {
                 call_info = "Outgoing call to " + call_name + " (" + call_number + ")"
             } else {
                 call_info = "Outgoing call to " + call_number
