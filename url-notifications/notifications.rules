@@ -1,0 +1,18 @@
+rule "Notifications testing"
+when
+    Time cron "0/15 * * * * ?"
+then
+    executeCommandLine('/var/lib/openhab2/deliver-http-notifications.py@@/var/lib/openhab2/cache/http-notifications@@https://trigger.url/path?param=test')
+end
+
+
+rule "Send spool"
+when
+    Time cron "0 * * * * ?"
+then
+    executeCommandLine('/var/lib/openhab2/deliver-http-notifications.py@@/var/lib/openhab2/cache/http-notifications')
+end
+
+
+
+
