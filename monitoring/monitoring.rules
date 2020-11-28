@@ -1,0 +1,129 @@
+// periodically check Things and Network items if they are online
+rule "Update Network Online Status"
+when
+    //Time cron "0/30 * * * * ?"
+    Time cron "0 0 * ? * * *"
+then
+    var count_offline = 0
+    var count_online = 0
+    var text_offline = ""
+
+    // one Raspberry runs a couple of monitoring tasks
+    // Thing: network:pingdevice:home_monitoring [ hostname="192.168.x.x", retry=2, refreshInterval=20000 ]
+    // Item: Switch Home_Monitoring { channel="network:pingdevice:home_monitoring:online" }
+    if (Home_Monitoring.state != ON) {
+        logInfo("Network Status Debug", "Home Monitoring is not online")
+        count_offline = count_offline + 1
+        if (count_offline == 1) {
+            text_offline = "Home Monitoring"
+        } else {
+            text_offline = text_offline + ", " + "Home Monitoring"
+        }
+    } else {
+        //logInfo("Network Status Debug", "Home Monitoring is online")
+        count_online = count_online + 1
+    }
+
+    // in the same way all other devices are monitored,
+    // but this is not repeated in this example
+
+
+    var HueStatus = getThingStatusInfo("hue:bridge:00xxxxxxxxxx")
+    if (HueStatus.getStatus().toString() != "ONLINE") {
+        logInfo("Network Status Debug", "Hue Bridge is not online")
+        count_offline = count_offline + 1
+        if (count_offline == 1) {
+            text_offline = "Hue Bridge"
+        } else {
+            text_offline = text_offline + ", " + "Hue Bridge"
+        }
+    } else {
+        //logInfo("Network Status Debug", "Hue Bridge is online")
+        count_online = count_online + 1
+    }
+
+    var DeconzStatus = getThingStatusInfo("deconz:deconz:zigbee")
+    if (DeconzStatus.getStatus().toString() != "ONLINE") {
+        logInfo("Network Status Debug", "Deconz Bridge is not online")
+        count_offline = count_offline + 1
+        if (count_offline == 1) {
+            text_offline = "Deconz Bridge"
+        } else {
+            text_offline = text_offline + ", " + "Deconz Bridge"
+        }
+    } else {
+        //logInfo("Network Status Debug", "Deconz Bridge is online")
+        count_online = count_online + 1
+    }
+
+    var TelegramStatus = getThingStatusInfo("telegram:telegramBot:HA_Bot")
+    if (TelegramStatus.getStatus().toString() != "ONLINE") {
+        logInfo("Network Status Debug", "Telegram Bot is not online")
+        count_offline = count_offline + 1
+        if (count_offline == 1) {
+            text_offline = "Telegram Bot"
+        } else {
+            text_offline = text_offline + ", " + "Telegram Bot"
+        }
+    } else {
+        //logInfo("Network Status Debug", "Telegram Bot is online")
+        count_online = count_online + 1
+    }
+
+    var DWDStatus = getThingStatusInfo("dwdunwetter:dwdwarnings:location")
+    if (DWDStatus.getStatus().toString() != "ONLINE") {
+        logInfo("Network Status Debug", "DWD Binding is not online")
+        count_offline = count_offline + 1
+        if (count_offline == 1) {
+            text_offline = "DWD Binding"
+        } else {
+            text_offline = text_offline + ", " + "DWD Binding"
+        }
+    } else {
+        //logInfo("Network Status Debug", "DWD Binding is online")
+        count_online = count_online + 1
+    }
+
+    var OWMStatus = getThingStatusInfo("openweathermap:weather-api:api")
+    if (OWMStatus.getStatus().toString() != "ONLINE") {
+        logInfo("Network Status Debug", "OWM Binding is not online")
+        count_offline = count_offline + 1
+        if (count_offline == 1) {
+            text_offline = "OWM Binding"
+        } else {
+            text_offline = text_offline + ", " + "OWM Binding"
+        }
+    } else {
+        //logInfo("Network Status Debug", "OWM Binding is online")
+        count_online = count_online + 1
+    }
+
+    // the ChromeCasts are specified in an Ansible variable
+    // and this is populated during deployment
+{% for cc in chromecasts %}
+    // for unknown reasons I need a new variable for each round
+    // maybe specify the type of the variable, but which one?
+    var CCStatus{{ cc['id'] }} = getThingStatusInfo("{{ cc['fullid'] }}")
+    if (CCStatus{{ cc['id'] }}.getStatus().toString() != "ONLINE") {
+        logInfo("Network Status Debug", "CC {{ cc['name'] }} is not online")
+        count_offline = count_offline + 1
+        if (count_offline == 1) {
+            text_offline = "CC {{ cc['name'] }}"
+        } else {
+            text_offline = text_offline + ", " + "CC {{ cc['name'] }}"
+        }
+    } else {
+        //logInfo("Network Status Debug", "CC {{ cc['name'] }} is online")
+        count_online = count_online + 1
+    }
+
+{% endfor %}
+
+
+    if (count_offline > 0) {
+        logInfo("Network Items offline", text_offline)
+        val telegramAction = getActions("telegram","telegram:telegramBot:HA_Bot")
+        telegramAction.sendTelegram(Long::parseLong(TELEGRAM_CHANNEL_HA_DETAILS), "Network Items offline: %s (%d/%d)", text_offline, count_offline, (count_offline + count_online))
+    }
+
+end
