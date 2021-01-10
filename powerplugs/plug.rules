@@ -1,0 +1,71 @@
+
+{% for p in plugs %}
+    {% if p['test_plug'] == '1' %}
+
+var Timer timer_{{ p['var_name'] }}_2 = null
+var Timer timer_{{ p['var_name'] }}_4 = null
+
+    {% endif %}
+
+var Timer timer_{{ p['var_name'] }}_final = null
+{% endfor %}
+
+
+
+
+{% for p in plugs %}
+rule "{{ p['name'] }} comes Online"
+when
+    Thing "{{ p['id'] }}" changed from OFFLINE to ONLINE
+then
+    logInfo("Power Plug Monitoring", "{{ p['name'] }} socket came online")
+    {% if p['test_plug'] == '1' %}
+
+    {{ p['item_name'] }}.sendCommand(OFF)
+
+    timer_{{ p['var_name'] }}_2 = createTimer(now.plusSeconds(2), [ |
+        {{ p['item_name'] }}.sendCommand(ON)
+        if (timer_{{ p['var_name'] }}_2 !== null) {
+            timer_{{ p['var_name'] }}_2.cancel()
+            timer_{{ p['var_name'] }}_2 = null
+        }
+    ])
+
+    timer_{{ p['var_name'] }}_4 = createTimer(now.plusSeconds(4), [ |
+        {{ p['item_name'] }}.sendCommand(OFF)
+        if (timer_{{ p['var_name'] }}_4 !== null) {
+            timer_{{ p['var_name'] }}_4.cancel()
+            timer_{{ p['var_name'] }}_4 = null
+        }
+    ])
+
+    timer_{{ p['var_name'] }}_final = createTimer(now.plusSeconds(6), [ |
+        {{ p['item_name'] }}.sendCommand({{ p['final_state'] }})
+        if (timer_{{ p['var_name'] }}_final !== null) {
+            timer_{{ p['var_name'] }}_final.cancel()
+            timer_{{ p['var_name'] }}_final = null
+        }
+    ])
+
+    {% else %}
+
+    timer_{{ p['var_name'] }}_final = createTimer(now.plusSeconds(2), [ |
+        {{ p['item_name'] }}.sendCommand({{ p['final_state'] }})
+        if (timer_{{ p['var_name'] }}_final !== null) {
+            timer_{{ p['var_name'] }}_final.cancel()
+            timer_{{ p['var_name'] }}_final = null
+        }
+    ])
+    {% endif %}
+
+end
+
+
+
+rule "{{ p['name'] }} goes Offline"
+when
+    Thing "{{ p['id'] }}" changed from ONLINE to OFFLINE
+then
+    logInfo("Power Plug Monitoring", "{{ p['name'] }} socket is offline")
+    {{ p['item_name'] }}.sendCommand(OFF)
+end

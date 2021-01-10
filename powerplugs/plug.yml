@@ -1,0 +1,9 @@
+---
+
+plugs:
+  - { name: 'Plug ads Desktop left side', id: 'hue:0010:00315E05C343:10', var_name: 'Plug_ads_Desktop_left_side',
+      item_name: 'Plug_ads_Desktop_left_side', final_state: 'ON', test_plug: '1' }
+  - { name: 'Plug ads Desktop right side', id: 'hue:0010:00315E05C343:11', var_name: 'Plug_ads_Desktop_right_side',
+      item_name: 'Plug_ads_Desktop_right_side', final_state: 'ON', test_plug: '1' }
+  - { name: 'Plug Living Room Night', id: 'hue:0010:00315E05C343:12', var_name: 'Plug_LivingRoom_Night',
+      item_name: 'Plug_LivingRoom_Night_Toggle', final_state: 'ON', test_plug: '1' }
