@@ -1,0 +1,14 @@
+{% set tankerkoenig = [('<Station Name 1>', '<Station Location 1>', '<Station UID 1 >', '<Latitude 1>', '<Longitude 1>'),
+                       ('<Station Name 2>', '<Station Location 2>', '<Station UID 2 >', '<Latitude 2>', '<Longitude 2>'),
+                       ('<Station Name 3>', '<Station Location 3>', '<Station UID 3 >', '<Latitude 3>', '<Longitude 3>')
+                      ] %}
+
+
+Bridge tankerkoenig:webservice:Tankpreise "Tankpreise" [ apikey="{{ lookup('file', playbook_dir + '/credentials/tankerkoenig.txt') }}", refresh=30, modeOpeningTime=true ] {
+{% for tk in tankerkoenig %}
+    // "lat": {{ tk[3] }}, "lon": {{ tk[4] }}
+    Thing station {{ tk[0] }} "{{ tk[1] }}" @ "GasStations"[ locationid = "{{ tk[2] }}" ]
+
+{% endfor %}
+
+}

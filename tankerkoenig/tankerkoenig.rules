@@ -1,0 +1,229 @@
+
+import java.util.HashMap
+
+
+val Number TELEGRAM_CHANNEL = "{{ lookup('file', playbook_dir + '/credentials/telegram-channel.txt') }}"
+
+
+
+{% set tankerkoenig = [('<Station Name 1>', '<Station Location 1>', '<Station UID 1 >', '<Latitude 1>', '<Longitude 1>'),
+                       ('<Station Name 2>', '<Station Location 2>', '<Station UID 2 >', '<Latitude 2>', '<Longitude 2>'),
+                       ('<Station Name 3>', '<Station Location 3>', '<Station UID 3 >', '<Latitude 3>', '<Longitude 3>')
+                      ] %}
+
+
+var Timer timer_TK_Binding_offline = null
+val Tanken_ReplyId = "Tankerkoenig_tanken"
+
+
+
+rule "Telegram Bot receive tanken"
+when
+    Item telegramlastMessageDate received update
+then
+    val telegramAction = getActions("telegram","telegram:telegramBot:HA_Bot")
+
+    if (telegramLastMessage.state.toString.toLowerCase == "/tanken") {
+        telegramAction.sendTelegramQuery(Long::parseLong(telegramLastMessageChatId.state.toString), "Tank Optionen:", Tanken_ReplyId, "E10", "Diesel", "E5")
+
+    } else if (telegramLastMessage.state.toString.toLowerCase == "/tanken diesel") {
+        var reply = "Dieselpreise:"
+
+        val HashMap<String, DecimalType> DieselMap = newHashMap
+{% for tk in tankerkoenig %}
+        if (TK_{{ tk[0] }}_Diesel.state != NULL && TK_{{ tk[0] }}_Diesel.state != UNDEF && TK_{{ tk[0] }}_Open.state == OPEN) {
+            DieselMap.put("{{ tk[1] }}", (TK_{{ tk[0] }}_Diesel.state as DecimalType))
+        }
+{% endfor %}
+        for (Price : DieselMap.entrySet.sortBy[value]) {
+            var String key = Price.getKey().toString
+            var String value = Price.getValue().toString
+            reply = reply + String::format("\n%s: `%s`€", key, value)
+        }
+
+        logInfo("Dieselpreise", reply)
+        telegramAction.sendTelegram(Long::parseLong(telegramLastMessageChatId.state.toString), reply)
+
+    } else if (telegramLastMessage.state.toString.toLowerCase == "/tanken e10") {
+        var reply = "Preise E10:"
+
+        val HashMap<String, DecimalType> E10Map = newHashMap
+{% for tk in tankerkoenig %}
+        if (TK_{{ tk[0] }}_E10.state != NULL && TK_{{ tk[0] }}_E10.state != UNDEF && TK_{{ tk[0] }}_Open.state == OPEN) {
+            logInfo("Tankerkoenig E10 Debug", "{}: {}", "{{ tk[1] }}", TK_{{ tk[0] }}_E10.state.toString)
+            E10Map.put("{{ tk[1] }}", (TK_{{ tk[0] }}_E10.state as DecimalType))
+        }
+{% endfor %}
+        for (Price : E10Map.entrySet.sortBy[value]) {
+            var String key = Price.getKey().toString
+            var String value = Price.getValue().toString
+            reply = reply + String::format("\n%s: `%s`€", key, value)
+        }
+
+        logInfo("Preise E10", reply)
+        telegramAction.sendTelegram(Long::parseLong(telegramLastMessageChatId.state.toString), reply)
+
+    } else if (telegramLastMessage.state.toString.toLowerCase == "/tanken e5") {
+        var reply = "Preise E5:"
+
+        val HashMap<String, DecimalType> E5Map = newHashMap
+{% for tk in tankerkoenig %}
+        if (TK_{{ tk[0] }}_E5.state != NULL && TK_{{ tk[0] }}_E5.state != UNDEF && TK_{{ tk[0] }}_Open.state == OPEN) {
+            E5Map.put("{{ tk[1] }}", (TK_{{ tk[0] }}_E5.state as DecimalType))
+        }
+{% endfor %}
+        for (Price : E5Map.entrySet.sortBy[value]) {
+            var String key = Price.getKey().toString
+            var String value = Price.getValue().toString
+            reply = reply + String::format("\n%s: `%s`€", key, value)
+        }
+
+        logInfo("Preise E5", reply)
+        telegramAction.sendTelegram(Long::parseLong(telegramLastMessageChatId.state.toString), reply)
+
+    } else if (telegramLastMessage.state.toString.length() > 6 && telegramLastMessage.state.toString.toLowerCase.substring(0, 7) == "/tanken") {
+        telegramAction.sendTelegram(Long::parseLong(telegramLastMessageChatId.state.toString), "Unknown option!")
+    }
+end
+
+
+rule "Telegram Bot receive tanken answer"
+when
+    Item telegramLastMessageReplyId received update Tankerkoenig_tanken
+then
+    val telegramAction = getActions("telegram","telegram:telegramBot:HA_Bot")
+
+    if (telegramLastMessage.state.toString == "Diesel") {
+        var reply = "Dieselpreise:"
+        var DateTime lastUpdate
+
+        val HashMap<String, DecimalType> DieselMap = newHashMap
+{% for tk in tankerkoenig %}
+        if (TK_{{ tk[0] }}_Diesel.state != NULL && TK_{{ tk[0] }}_Diesel.state != UNDEF && TK_{{ tk[0] }}_Open.state == OPEN) {
+            DieselMap.put("{{ tk[1] }}", (TK_{{ tk[0] }}_Diesel.state as DecimalType))
+            lastUpdate = TK_{{ tk[0] }}_Diesel.lastUpdate("influxdb")
+        }
+{% endfor %}
+        for (Price : DieselMap.entrySet.sortBy[value]) {
+            var String key = Price.getKey().toString
+            var String value = Price.getValue().toString
+            reply = reply + String::format("\n%s: `%s`€", key, value)
+        }
+        reply = reply + String::format("\n\nvon: %s", lastUpdate.toString("yyyy-MM-dd HH:mm"))
+
+        logInfo("Dieselpreise", reply)
+        telegramAction.sendTelegramAnswer(Long::parseLong(telegramLastMessageChatId.state.toString), telegramLastMessageReplyId.state.toString, reply)
+
+    } else if (telegramLastMessage.state.toString == "E10") {
+        var reply = "Preise E10:"
+        var DateTime lastUpdate
+
+        val HashMap<String, DecimalType> E10Map = newHashMap
+{% for tk in tankerkoenig %}
+        if (TK_{{ tk[0] }}_E10.state != NULL && TK_{{ tk[0] }}_E10.state != UNDEF && TK_{{ tk[0] }}_Open.state == OPEN) {
+            E10Map.put("{{ tk[1] }}", (TK_{{ tk[0] }}_E10.state as DecimalType))
+            lastUpdate = TK_{{ tk[0] }}_Diesel.lastUpdate("influxdb")
+        }
+{% endfor %}
+        for (Price : E10Map.entrySet.sortBy[value]) {
+            var String key = Price.getKey().toString
+            var String value = Price.getValue().toString
+            reply = reply + String::format("\n%s: `%s`€", key, value)
+        }
+        reply = reply + String::format("\n\nvon: %s", lastUpdate.toString("yyyy-MM-dd HH:mm"))
+
+        logInfo("Preise E10", reply)
+        telegramAction.sendTelegramAnswer(Long::parseLong(telegramLastMessageChatId.state.toString), telegramLastMessageReplyId.state.toString, reply)
+
+    } else if (telegramLastMessage.state.toString == "E5") {
+        var reply = "Preise E5:"
+        var DateTime lastUpdate
+
+        val HashMap<String, DecimalType> E5Map = newHashMap
+{% for tk in tankerkoenig %}
+        if (TK_{{ tk[0] }}_E5.state != NULL && TK_{{ tk[0] }}_E5.state != UNDEF && TK_{{ tk[0] }}_Open.state == OPEN) {
+            E5Map.put("{{ tk[1] }}", (TK_{{ tk[0] }}_E5.state as DecimalType))
+            lastUpdate = TK_{{ tk[0] }}_Diesel.lastUpdate("influxdb")
+        }
+{% endfor %}
+        for (Price : E5Map.entrySet.sortBy[value]) {
+            var String key = Price.getKey().toString
+            var String value = Price.getValue().toString
+            reply = reply + String::format("\n%s: `%s`€", key, value)
+        }
+        reply = reply + String::format("\n\nvon: %s", lastUpdate.toString("yyyy-MM-dd HH:mm"))
+
+        logInfo("Preise E5", reply)
+        telegramAction.sendTelegramAnswer(Long::parseLong(telegramLastMessageChatId.state.toString), telegramLastMessageReplyId.state.toString, reply)
+
+
+    } else {
+        telegramAction.sendTelegram(Long::parseLong(telegramLastMessageChatId.state.toString), "Unknown option!")
+    }
+
+    if (telegramLastMessageReplyId.state.toString == Tanken_ReplyId) {
+        // make sure the next request can see an update for "telegramLastMessageReplyId"
+        telegramLastMessageReplyId.postUpdate(NULL)
+    }
+end
+
+
+rule "Tankerkoenig Thing online status changed"
+when
+    Thing "tankerkoenig:webservice:Tankpreise" changed
+then
+    var TankerkoenigStatus = getThingStatusInfo("tankerkoenig:webservice:Tankpreise")
+    if (TankerkoenigStatus.getStatus().toString() != "OFFLINE" && TankerkoenigStatus.getStatus().toString() != "ONLINE" && TankerkoenigStatus.getStatus().toString() != "UNKNOWN") {
+      var logMsg = "Tankerkoenig Status: " + TankerkoenigStatus.getStatus().toString()
+      if (TankerkoenigStatus.statusDetail != "NONE" && TankerkoenigStatus.statusDetail !== null) {
+          logMsg = logMsg + ", " + TankerkoenigStatus.statusDetail
+      }
+      if (TankerkoenigStatus.description != "NONE" && TankerkoenigStatus.description !== null) {
+          logMsg = logMsg + ", " + TankerkoenigStatus.description
+      }
+
+      logInfo("Tankerkoenig Status", logMsg)
+      val telegramAction = getActions("telegram","telegram:telegramBot:HA_Bot")
+      telegramAction.sendTelegram(Long::parseLong(TELEGRAM_CHANNEL), "%s:\n%s", "Tankerkoenig", TankerkoenigStatus.getStatus().toString())
+    }
+end
+
+
+
+// the following code monitors the extension, and reports when it is offline for a longer period of time
+// use a timer to avoid notifications for short outages
+
+rule "Tankerkoenig Binding offline - timer"
+when
+    Thing "tankerkoenig:webservice:Tankpreise" changed from ONLINE to OFFLINE
+then
+    logInfo("Tankerkoenig Binding Status", "Tankerkoenig Binding offline")
+    if (timer_TK_Binding_offline === null) {
+        timer_TK_Binding_offline = createTimer(now.plusMinutes(60), [ |
+            // there was no cancel because the Thing never came online in the past minute
+            logInfo("Tankerkoenig Binding Status", "Tankerkoenig Binding is offline")
+            // trying anyway
+            val telegramAction = getActions("telegram","telegram:telegramBot:HA_Bot")
+            telegramAction.sendTelegram(Long::parseLong(TELEGRAM_CHANNEL), "%s %s", "Tankerkoenig Binding", "offline")
+            timer_TK_Binding_offline = null
+        ])
+    }
+end
+
+rule "Tankerkoenig Binding online - timer"
+when
+    Thing "tankerkoenig:webservice:Tankpreise" changed from OFFLINE to ONLINE
+then
+    logInfo("Tankerkoenig Binding Status", "Tankerkoenig Binding is online")
+    if (timer_TK_Binding_offline === null) {
+        // recovered from longer downtime, > 1 minute
+        logInfo("Tankerkoenig Binding Status", "Timer for tankerkoenig:webservice:Tankpreise is already stopped")
+        val telegramAction = getActions("telegram","telegram:telegramBot:HA_Bot")
+        telegramAction.sendTelegram(Long::parseLong(TELEGRAM_CHANNEL), "%s %s", "Tankerkoenig Binding", "online")
+    } else {
+        logInfo("Tankerkoenig Binding Status Debug", "Timer for tankerkoenig:webservice:Tankpreise is running, stopping it")
+        timer_TK_Binding_offline.cancel()
+        timer_TK_Binding_offline = null
+        // no further notification required, was a short downtime
+    }
+end

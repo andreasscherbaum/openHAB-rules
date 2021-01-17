@@ -1,0 +1,22 @@
+{% set tankerkoenig = [('<Station Name 1>', '<Station Location 1>', '<Station UID 1 >', '<Latitude 1>', '<Longitude 1>'),
+                       ('<Station Name 2>', '<Station Location 2>', '<Station UID 2 >', '<Latitude 2>', '<Longitude 2>'),
+                       ('<Station Name 3>', '<Station Location 3>', '<Station UID 3 >', '<Latitude 3>', '<Longitude 3>')
+                      ] %}
+
+
+Group GasStationPrices_E10
+Group GasStationPrices_E5
+Group GasStationPrices_Diesel
+Group GasStation_Open
+
+Switch		Station_Holidays				"Today is holiday: [%s]"	{ channel="tankerkoenig:webservice:Tankpreise:holiday"}
+
+
+{% for tk in tankerkoenig %}
+// Station: {{ tk[1] }}
+Number		TK_{{ tk[0] }}_E10			"E10 [%.3f €]"		(GasStationPrices_E10)		{ channel="tankerkoenig:station:Tankpreise:{{ tk[0] }}:e10" }
+Number		TK_{{ tk[0] }}_E5			"E5 [%.3f €]"		(GasStationPrices_E5)		{ channel="tankerkoenig:station:Tankpreise:{{ tk[0] }}:e5" }
+Number		TK_{{ tk[0] }}_Diesel			"Diesel [%.3f €]"	(GasStationPrices_Diesel)	{ channel="tankerkoenig:station:Tankpreise:{{ tk[0] }}:diesel"}
+Contact		TK_{{ tk[0] }}_Open			"Station is [%s]"	(GasStation_Open)		{ channel="tankerkoenig:station:Tankpreise:{{ tk[0] }}:station_open"}
+
+{% endfor %}
