@@ -1,0 +1,7 @@
+Bridge deconz:deconz:homezigbee [ host="10.10.10.10", httpPort="80", apikey="xxxxx" ] {
+    presencesensor		sensor-floor-upstairs-presence		"Presence Sensor Floor Upstairs"		[ id="xx", lastSeenPolling=60 ]
+    presencesensor		sensor-stairs-upstairs-presence		"Stairs Upstairs Presence Sensor"		[ id="xx", lastSeenPolling=60 ]
+    presencesensor		sensor-working-room-door-presence	"Working Room Door Presence Sensor"		[ id="xx", lastSeenPolling=60 ]
+
+    colortemperaturelight	light-floor-upstairs			"Light Floor Upstairs"				[ id="xx" ]
+}

@@ -1,0 +1,48 @@
+// name: sensor-floor-upstairs-presence
+// id: xx
+// description: Presence Sensor Floor Upstairs
+Switch		Sensor_Floor_Upstairs_Presence		"Presence Sensor Floor Upstairs [%s]"		{ channel="deconz:presencesensor:homezigbee:sensor-floor-upstairs-presence:presence" }
+DateTime	Sensor_Floor_Upstairs_LastUpdated	"Last Update [%1$td.%1$tm.%1$tY %1$tH:%1$tM]"	{ channel="deconz:presencesensor:homezigbee:sensor-floor-upstairs-presence:last_updated" }
+DateTime	Sensor_Floor_Upstairs_LastSeen		"Last Seen [%1$td.%1$tm.%1$tY %1$tH:%1$tM]"	{ channel="deconz:presencesensor:homezigbee:sensor-floor-upstairs-presence:last_seen" }
+Number		Sensor_Floor_Upstairs_BatteryLevel	"Battery Level [%d %%]"				{ channel="deconz:presencesensor:homezigbee:sensor-floor-upstairs-presence:battery_level" }
+Switch		Sensor_Floor_Upstairs_BatteryLow	"Battery Low"					{ channel="deconz:presencesensor:homezigbee:sensor-floor-upstairs-presence:battery_low" }
+// end
+
+
+
+// name: sensor-stairs-upstairs-presence
+// id: xx
+// description: Stairs Upstairs Presence Sensor
+Switch		Sensor_Stairs_Upstairs_Presence		"Stairs Upstairs Presence Sensor [%s]"		{ channel="deconz:presencesensor:homezigbee:sensor-stairs-upstairs-presence:presence" }
+DateTime	Sensor_Stairs_Upstairs_LastUpdated	"Last Update [%1$td.%1$tm.%1$tY %1$tH:%1$tM]"	{ channel="deconz:presencesensor:homezigbee:sensor-stairs-upstairs-presence:last_updated" }
+DateTime	Sensor_Stairs_Upstairs_LastSeen		"Last Seen [%1$td.%1$tm.%1$tY %1$tH:%1$tM]"	{ channel="deconz:presencesensor:homezigbee:sensor-stairs-upstairs-presence:last_seen" }
+Number		Sensor_Stairs_Upstairs_BatteryLevel	"Battery Level [%d %%]"				{ channel="deconz:presencesensor:homezigbee:sensor-stairs-upstairs-presence:battery_level" }
+Switch		Sensor_Stairs_Upstairs_BatteryLow	"Battery Low"					{ channel="deconz:presencesensor:homezigbee:sensor-stairs-upstairs-presence:battery_low" }
+// end
+
+
+
+// name: sensor-working-room-door-presence
+// id: xx
+// description: Working Room Door Presence Sensor
+Switch		Sensor_Working_Room_Door_Presence	"Working Room Door Presence Sensor [%s]"	{ channel="deconz:presencesensor:homezigbee:sensor-working-room-door-presence:presence" }
+DateTime	Sensor_Working_Room_Door_LastUpdated	"Last Update [%1$td.%1$tm.%1$tY %1$tH:%1$tM]"	{ channel="deconz:presencesensor:homezigbee:sensor-working-room-door-presence:last_updated" }
+DateTime	Sensor_Working_Room_Door_LastSeen	"Last Seen [%1$td.%1$tm.%1$tY %1$tH:%1$tM]"	{ channel="deconz:presencesensor:homezigbee:sensor-working-room-door-presence:last_seen" }
+Number		Sensor_Working_Room_Door_BatteryLevel	"Battery Level [%d %%]"				{ channel="deconz:presencesensor:homezigbee:sensor-working-room-door-presence:battery_level" }
+Switch		Sensor_Working_Room_Door_BatteryLow	"Battery Low"					{ channel="deconz:presencesensor:homezigbee:sensor-working-room-door-presence:battery_low" }
+// end
+
+
+
+// name: light-floor-upstairs
+// id: 8
+// description: Light Floor Upstairs
+Dimmer		Light_Floor_Upstairs_Brightness		"Brightness [%d]"				{ channel="deconz:colortemperaturelight:homezigbee:light-floor-upstairs:brightness" }
+Number		Light_Floor_Upstairs_ColorTemperature	"Color Temperature [%d]"			{ channel="deconz:colortemperaturelight:homezigbee:light-floor-upstairs:color_temperature" }
+String		Light_Floor_Upstairs_alert		"Alert"						{ channel="deconz:colortemperaturelight:homezigbee:light-floor-upstairs:alert" }
+
+
+
+// virtual switch showing if someone is present in the upper floor
+// might be triggered from a number of sensors
+Switch		Upper_Floor_Presence			"Presence in the Upper Floor"

@@ -1,0 +1,246 @@
+import java.util.concurrent.locks.ReentrantLock
+
+val TELEGRAM_BOT = "xxxxx"
+val Number TELEGRAM_CHANNEL_HA = "-1"
+val Number TELEGRAM_CHANNEL_HA_DETAILS = "-2"
+
+
+// this timer is used to delay the "off" for the light(s) by $LightsOnSeconds
+var Timer timer_floor_upstairs = null
+val ReentrantLock lock_floor_upstairs = new ReentrantLock
+
+// these timers are used to smooth the light on and light off
+// this gives an indication that the light is about to go off
+var Timer timer_Light_Floor_Upstairs_on_1 = null
+var Timer timer_Light_Floor_Upstairs_on_2 = null
+var Timer timer_Light_Floor_Upstairs_on_3 = null
+var Timer timer_Light_Floor_Upstairs_on_4 = null
+var Timer timer_Light_Floor_Upstairs_off_1 = null
+var Timer timer_Light_Floor_Upstairs_off_2 = null
+var Timer timer_Light_Floor_Upstairs_off_3 = null
+
+
+// how long is the light on, after the last Motion sensor goes off
+val Number LightsOnSeconds = 60
+
+
+
+rule "Motion Sensors Floor Upstairs present on"
+when
+    Item Sensor_Working_Room_Door_Presence changed to ON or
+    Item Sensor_Stairs_Upstairs_Presence changed to ON or
+    Item Sensor_Floor_Upstairs_Presence changed to ON
+then
+    // presence goes on without the lock
+    Upper_Floor_Presence.postUpdate(ON)
+
+    lock_floor_upstairs.lock()
+    // have the lock, update timers
+    try {
+        // remove the timer, if active
+        if (timer_floor_upstairs !== null) {
+            logInfo("Floor Upstairs", "Cancel running timer (in on routine)")
+            timer_floor_upstairs.cancel()
+            timer_floor_upstairs = null
+        }
+    }
+    finally {
+        // make sure the lock is released, even if something goes wrong
+        if (lock_floor_upstairs.isHeldByCurrentThread()) {
+            lock_floor_upstairs.unlock()
+        }
+    }
+    if (lock_floor_upstairs.isHeldByCurrentThread()) {
+        lock_floor_upstairs.unlock()
+    }
+end
+
+
+
+// the following rule updates the "cancel" timer, if this timer is already running
+rule "Motion Sensors Floor Upstairs update"
+when
+    Item Sensor_Working_Room_Door_Presence received update or
+    Item Sensor_Stairs_Upstairs_Presence received update or
+    Item Sensor_Floor_Upstairs_Presence received update
+then
+    // only do something if the presence sensors are already on
+    if (Sensor_Working_Room_Door_Presence.state == ON || Sensor_Stairs_Upstairs_Presence.state == ON || Sensor_Floor_Upstairs_Presence.state == ON) {
+        // presence goes on without the lock
+        Upper_Floor_Presence.postUpdate(ON)
+
+        lock_floor_upstairs.lock()
+        // have the lock, update timers
+        try {
+            // remove the timer, if active
+            if (timer_floor_upstairs !== null) {
+                logInfo("Floor Upstairs", "Cancel running timer (in update routine)")
+                timer_floor_upstairs.cancel()
+                timer_floor_upstairs = null
+            }
+        }
+        finally {
+            // make sure the lock is released, even if something goes wrong
+            if (lock_floor_upstairs.isHeldByCurrentThread()) {
+                lock_floor_upstairs.unlock()
+            }
+        }
+        if (lock_floor_upstairs.isHeldByCurrentThread()) {
+            lock_floor_upstairs.unlock()
+        }
+    }
+end
+
+
+
+// one motion sensor goes off
+rule "Motion Sensors Floor Upstairs present off"
+when
+    Item Sensor_Working_Room_Door_Presence changed to OFF or
+    Item Sensor_Stairs_Upstairs_Presence changed to OFF or
+    Item Sensor_Floor_Upstairs_Presence changed to OFF
+then
+    lock_floor_upstairs.lock()
+    // have the lock, update timers
+    try {
+        // remove the timer, if active
+        if (timer_floor_upstairs !== null) {
+            logInfo("Floor Upstairs", "Cancel running timer (in off routine)")
+            timer_floor_upstairs.cancel()
+            timer_floor_upstairs = null
+        }
+        // now restart the timer
+        logInfo("Floor Upstairs", "Start timer with {} seconds", LightsOnSeconds)
+        timer_floor_upstairs = createTimer(now.plusSeconds(LightsOnSeconds), [ |
+            // start a timer which will - once finished - update Upper_Floor_Presence
+            // which in turn triggers the off routing
+            Upper_Floor_Presence.postUpdate(OFF)
+        ])
+    }
+    finally {
+        // make sure the lock is released, even if something goes wrong
+        if (lock_floor_upstairs.isHeldByCurrentThread()) {
+            lock_floor_upstairs.unlock()
+        }
+    }
+    if (lock_floor_upstairs.isHeldByCurrentThread()) {
+        lock_floor_upstairs.unlock()
+    }
+
+end
+
+
+
+// system starts, turn off all lights
+rule "Init Floor Upstairs Light"
+when
+    System started
+then
+    Upper_Floor_Presence.postUpdate(OFF)
+    Light_Floor_Upstairs_Brightness.sendCommand(0)
+end
+
+
+
+// the presence switch came online, turn on the lights
+rule "Floor Upstairs Light on"
+when
+    Item Upper_Floor_Presence changed to ON
+then
+    val telegramAction = getActions("telegram","telegram:telegramBot:HA_Bot")
+    telegramAction.sendTelegram(Long::parseLong(TELEGRAM_CHANNEL_HA_DETAILS), "%s", "Light Upstairs on")
+    logInfo("Floor Upstairs", "Turning light on")
+
+    // if the "off" routine is going on, cancel it first
+    if (timer_Light_Floor_Upstairs_off_1 !== null) {
+        timer_Light_Floor_Upstairs_off_1.cancel()
+        timer_Light_Floor_Upstairs_off_1 = null
+    }
+    if (timer_Light_Floor_Upstairs_off_2 !== null) {
+        timer_Light_Floor_Upstairs_off_2.cancel()
+        timer_Light_Floor_Upstairs_off_2 = null
+    }
+    if (timer_Light_Floor_Upstairs_off_3 !== null) {
+        timer_Light_Floor_Upstairs_off_3.cancel()
+        timer_Light_Floor_Upstairs_off_3 = null
+    }
+
+    Light_Floor_Upstairs_Brightness.sendCommand(5)
+    Light_Floor_Upstairs_ColorTemperature.sendCommand(3000)
+    timer_Light_Floor_Upstairs_on_1 = createTimer(now.plusMillis(500), [ |
+        Light_Floor_Upstairs_Brightness.sendCommand(25)
+        timer_Light_Floor_Upstairs_on_1.cancel()
+        timer_Light_Floor_Upstairs_on_1 = null
+    ])
+    timer_Light_Floor_Upstairs_on_2 = createTimer(now.plusMillis(1000), [ |
+        Light_Floor_Upstairs_Brightness.sendCommand(50)
+        timer_Light_Floor_Upstairs_on_2.cancel()
+        timer_Light_Floor_Upstairs_on_2 = null
+    ])
+    timer_Light_Floor_Upstairs_on_3 = createTimer(now.plusMillis(1500), [ |
+        Light_Floor_Upstairs_Brightness.sendCommand(75)
+        timer_Light_Floor_Upstairs_on_3.cancel()
+        timer_Light_Floor_Upstairs_on_3 = null
+    ])
+    timer_Light_Floor_Upstairs_on_4 = createTimer(now.plusMillis(2000), [ |
+        Light_Floor_Upstairs_Brightness.sendCommand(100)
+        timer_Light_Floor_Upstairs_on_4.cancel()
+        timer_Light_Floor_Upstairs_on_4 = null
+        Thread::sleep(200)
+        Light_Floor_Upstairs_ColorTemperature.sendCommand(3000)
+    ])
+end
+
+
+
+// the presence switch goes off
+// slowly turn off the light
+rule "Floor Upstairs Light off"
+when
+    Item Upper_Floor_Presence changed to OFF
+then
+    val telegramAction = getActions("telegram","telegram:telegramBot:HA_Bot")
+    telegramAction.sendTelegram(Long::parseLong(TELEGRAM_CHANNEL_HA_DETAILS), "%s", "Light Upstairs off")
+    if (Light_Floor_Upstairs_Brightness.state > 1) {
+        logInfo("Floor Upstairs", "Turning light off")
+        Light_Floor_Upstairs_Brightness.sendCommand(75)
+        Light_Floor_Upstairs_ColorTemperature.sendCommand(3000)
+        timer_Light_Floor_Upstairs_off_1 = createTimer(now.plusSeconds(5), [ |
+            Light_Floor_Upstairs_Brightness.sendCommand(50)
+            timer_Light_Floor_Upstairs_off_1.cancel()
+            timer_Light_Floor_Upstairs_off_1 = null
+        ])
+        timer_Light_Floor_Upstairs_off_2 = createTimer(now.plusSeconds(10), [ |
+            Light_Floor_Upstairs_Brightness.sendCommand(25)
+            timer_Light_Floor_Upstairs_off_2.cancel()
+            timer_Light_Floor_Upstairs_off_2 = null
+        ])
+        // leave an extra long time for anyone to exit the area
+        timer_Light_Floor_Upstairs_off_3 = createTimer(now.plusSeconds(20), [ |
+            Light_Floor_Upstairs_Brightness.sendCommand(0)
+            timer_Light_Floor_Upstairs_off_3.cancel()
+            timer_Light_Floor_Upstairs_off_3 = null
+        ])
+    } else {
+        logInfo("Floor Upstairs", "Light is already off")
+        if (Light_Floor_Upstairs_Brightness.state > 0) {
+            Light_Floor_Upstairs_Brightness.sendCommand(0)
+        }
+    }
+end
+
+
+
+// this monitors the light itself, and sends an audio notification when the light is turned off
+// there is more monitoring rolled out for the light itself, which sends notifications to Telegram
+// but this rule here sends an extra info to an audio sink, to make everyone aware that the ligt will not work
+rule "light-floor-upstairs goes Offline - audio notification"
+when
+    Thing "deconz:colortemperaturelight:homezigbee:light-floor-upstairs" changed from ONLINE to OFFLINE
+then
+    playSound("chromecast:audio:xxxxx", "1-second-of-silence.mp3")
+    Thread::sleep(1100)
+    playSound("chromecast:audio:xxxxx", "computerbeep_69.mp3")
+    Thread::sleep(800)
+    say("Lampe im Flur oben ist ausgeschaltet", "picotts:deDE", "chromecast:audio:xxxxx")
+end
